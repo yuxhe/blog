@@ -1,0 +1,17 @@
+-- mysql 大致所占内存
+SELECT ( @@innodb_buffer_pool_size + @@innodb_log_buffer_size + @@key_buffer_size 
++ @@max_connections * (@@binlog_cache_size + @@thread_stack + @@read_buffer_size 
++ @@read_rnd_buffer_size + @@sort_buffer_size + @@join_buffer_size + @@tmp_table_size ) 
+) / 1024 /1024 AS MAX_MEM_MB;
+
+-- mysql启动多了长时间
+show global status like 'uptime';
+
+select 46145/60/60/24;
+ 
+使用 ps 检查进程启动时间
+使用 ps 命令查询发现 mysqld 启动了4天23小时3分种54秒
+
+-- 命令查看进程启动多长时间
+ps -eo pid,user,args,etime|grep mysqld
+791 mysql    /usr/sbin/mysqld --daemoniz  4-23:03:54
