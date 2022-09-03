@@ -1,0 +1,31 @@
+show variables like 'max_connections'; -- 最大连接数 默认151
+
+show variables like 'Max_used_connections'; -- 启动以来到现在 同时使用的连接的最大数目 ，某时刻最大值
+-- 如果在过去某一个时刻，MYSQL服务同时有1000个请求连接过来，而之后再也没有出现这么大的并发请求时
+
+show variables like 'max_user_connections'; -- 是指每个数据库用户的最大连接 默认0不限制
+
+show status like '%Threads_connected%'; -- 当前打开的连接的数量
+
+show status like '%Threads_running%';  -- 不在睡眠的线程数量 ,这个数值指的是激活的连接数,代表当前并发数 ,***   这个数值一般远低于connected数值
+
+
+show status like '%max_connect_errors%'; -- 当同一个客户端连接出错的次数达到-max_connect_errors时，服务器将阻止该主机进行再次连接。默认为 100 
+
+show status like '%max_connect_errors%';  -- connect_timeout： 等待一个连接响应的时间，默认为 10s ，在获取连接阶段起作用，可动态修改
+
+show variables like 'back_log';  -- 查看当前数量
+
+-- 查看当前系统的TCP/IP连接的侦听队列的大小命令：cat /proc/sys/net/ipv4/tcp_max_syn_backlog目前系统为1024
+
+-- mysql高并发配置 要在mysqld下设置 1 修改back_log参数值:由默认的50修改为500.(每个连接256kb,占用：125M) back_log=500
+
+show variables like 'thread_concurrency';
+/*
+thread_concurrency的值的正确与否, 对mysql的性能影响很大, 在多个cpu(或多核)的情况下，错误设置了thread_concurrency的值, 会导致mysql不能充分利用多cpu(或多核), 出现同一时刻只能一个cpu(或核)在工作的情况。
+thread_concurrency应设为CPU核数的2倍. 比如有一个双核的CPU, 那thread_concurrency 的应该为4; 2个双核的cpu, thread_concurrency的值应为8.
+*/
+
+SHOW VARIABLES LIKE 'log_error'; -- 日志文件存放路径  错误日志文件的一部分，主要记载了系统的一些运行错误
+
+-- 数据行的长度不要超过8020字节，如果超过这个长度的话在物理页中这条数据会占用两行从而造成存储碎片，降低查询效率
